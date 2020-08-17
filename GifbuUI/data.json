@@ -1,0 +1,10 @@
+{
+	"Message": "Lütfen içeriye bak",
+	"ImagePath": "http://localhost:3000/static/media/5.55747963.gif",
+	"Machine": {
+		"Id": "1c29407e-8c7b-4470-a88d-9b1be9614452",
+		"PortName": "3",
+		"BaudRate": 9600,
+		"Parity": 0
+	}
+}

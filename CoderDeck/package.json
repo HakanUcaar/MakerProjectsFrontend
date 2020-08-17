@@ -1,0 +1,73 @@
+{
+  "name": "coderdeck",
+  "version": "0.0.32",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^4.10.0",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.54",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "acorn": "^7.1.1",
+    "cross-env": "^6.0.3",
+    "custom-electron-titlebar": "^3.2.2-hotfix62",    
+    "electron-edge-js": "^12.14.1",
+    "electron-is-dev": "^1.1.0",
+    "file-saver": "^2.0.2",
+    "kind-of": "^6.0.3",
+    "minimist": "^1.2.5",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-file-picker": "0.0.6",
+    "react-redux": "^7.2.0",
+    "react-scripts": "3.3.0",
+    "underscore": "^1.10.2",
+    "uuid": "^8.1.0"    
+  },
+  "scripts": {
+    "react-start": "react-scripts start",
+    "react-build": "react-scripts build",
+    "react-test": "react-scripts test --env=jsdom",
+    "react-eject": "react-scripts eject",
+    "electron-build": "electron-builder",
+    "release": "yarn react-build && electron-builder --publish=always",
+    "build": "yarn react-build && yarn electron-build",
+    "start": "concurrently \"cross-env BROWSER=none yarn react-start\" \"wait-on http://localhost:3000 && electron .\""
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "concurrently": "^5.0.2",
+    "redux": "^4.0.5",
+    "electron-builder": "^22.7.0",
+    "electron": "^7.1.9",
+    "wait-on": "^3.3.0"
+  },
+  "main": "public/electron.js",
+  "homepage": "./",
+  "description": "CoderDeck",
+  "author": "Hakan UÇAR",
+  "build": {
+    "appId": "CoderDeck",
+    "win": {
+      "icon": "public/icon.ico",
+      "target": [
+        "nsis"
+      ]
+    }
+  }
+}

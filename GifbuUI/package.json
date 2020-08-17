@@ -1,0 +1,72 @@
+{
+  "name": "GifBu",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^4.10.2",
+    "@material-ui/icons": "^4.9.1",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "acorn": "^7.1.1",
+    "cross-env": "^6.0.3",
+    "crypto-js": "^4.0.0",
+    "custom-electron-titlebar": "^3.2.2-hotfix62",
+    "electron-edge-js": "^12.14.2",
+    "electron-is-dev": "^1.1.0",
+    "kind-of": "^6.0.3",
+    "minimist": "^1.2.5",
+    "notistack": "^0.9.17",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-redux": "^7.2.0",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "3.3.0",
+    "redux": "^4.0.5",
+    "uuid": "^8.1.0",
+    "wait-on": "^3.3.0",
+    "ws": "^7.3.0"
+  },
+  "scripts": {
+    "react-start": "react-scripts start",
+    "react-build": "react-scripts build",
+    "react-test": "react-scripts test --env=jsdom",
+    "react-eject": "react-scripts eject",
+    "electron-build": "electron-builder",
+    "release": "yarn react-build && electron-builder --publish=always",
+    "build": "yarn react-build && yarn electron-build",
+    "start": "concurrently \"cross-env BROWSER=none yarn react-start\" \"wait-on http://localhost:3000 && electron .\""
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "main": "public/electron.js",
+  "homepage": "./",
+  "description": "Gifbu",
+  "author": "Hakan UÇAR",
+  "build": {
+    "appId": "Gifbu",
+    "win": {
+      "target": [
+        "portable"
+      ]
+    }
+  },
+  "devDependencies": {
+    "concurrently": "^5.0.2",
+    "electron": "^7.1.9",
+    "electron-builder": "^22.2.0"
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "name": "electron-react-boilerplate",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^4.11.0",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.5.0",
+    "@testing-library/user-event": "^7.1.2",
+    "acorn": "^7.4.0",
+    "cross-env": "^6.0.3",
+    "electron": "^7.3.2",
+    "electron-builder": "^22.8.0",
+    "electron-is-dev": "^1.2.0",
+    "kind-of": "^6.0.3",
+    "mail-notifier": "^0.5.0",
+    "minimist": "^1.2.5",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-redux": "^7.2.1",
+    "react-scripts": "^3.4.1",
+    "serialport": "^9.0.0",
+    "wait-on": "^3.3.0"
+  },
+  "scripts": {
+    "rebuild": "electron-rebuild -f -w yourmodule",
+    "react-start": "react-scripts start",
+    "react-build": "react-scripts build",
+    "react-test": "react-scripts test --env=jsdom",
+    "react-eject": "react-scripts eject",
+    "electron-build": "electron-builder",
+    "release": "yarn react-build && electron-builder --publish=always",
+    "build": "yarn react-build && yarn electron-build",
+    "start": "concurrently \"cross-env BROWSER=none yarn react-start\" \"wait-on http://localhost:3000 && electron .\""
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "main": "public/electron.js",
+  "homepage": "./",
+  "description": "React Electron Test3",
+  "author": "Hakan UÇAR",
+  "build": {
+    "appId": "EFatura Görüntüleyicisi",
+    "win": {
+      "target": [
+        "portable",
+        "nsis"
+      ]
+    }
+  },
+  "devDependencies": {
+    "@material-ui/icons": "^4.9.1",
+    "concurrently": "^5.2.0",
+    "electron-tray-window": "^1.2.5",
+    "i": "^0.3.6",
+    "npm": "^6.14.7",
+    "redux": "^4.0.5"
+  }
+}

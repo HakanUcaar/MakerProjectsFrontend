@@ -1,0 +1,4 @@
+export const UPDATE_SETTINGS = "UPDATE_SETTINGS";
+export const READ_SETTINGS = "READ_SETTINGS";
+export const SAVE_SETTINGS = "SAVE_SETTINGS";
+
