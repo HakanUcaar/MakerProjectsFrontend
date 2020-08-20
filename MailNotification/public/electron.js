@@ -34,17 +34,17 @@ function createWindow() {
     mainWindow.on("closed", () => (mainWindow = null));
 }
 
-app.on("ready", createWindow);
-// app.on("ready", () => {
-//     TrayWindow.setOptions({
-//       trayIconPath: path.join(__dirname,"/logo192.png"),
-//       windowUrl: isDev
-//         ? "http://localhost:3000"
-//         : `file:///${path.join(__dirname, "../build/index.html")}`,
-//       width: 300,
-//       height: 500
-//     });
-// });
+//app.on("ready", createWindow);
+app.on("ready", () => {
+    TrayWindow.setOptions({
+      trayIconPath: path.join(__dirname,"/logo192.png"),
+      windowUrl: isDev
+        ? "http://localhost:3000"
+        : `file:///${path.join(__dirname, "../build/index.html")}`,
+      width: 300,
+      height: 500
+    });
+});
 
 app.on("window-all-closed", () => {
     if (process.platform !== "darwin") {
@@ -57,3 +57,9 @@ app.on("window-all-closed", () => {
 //     createWindow();
 //     }
 // });
+
+
+ipcMain.on('create-notification', (event, arg) => {     
+    const NotificationWindow = require("./createNoficationWindow");
+    NotificationWindow.createWindow();   
+})

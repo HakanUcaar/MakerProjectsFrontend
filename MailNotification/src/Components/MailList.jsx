@@ -10,7 +10,8 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import CommentIcon from '@material-ui/icons/Comment';
 import Divider from '@material-ui/core/Divider';
-
+import Avatar from '@material-ui/core/Avatar';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Paper from '@material-ui/core/Paper';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
@@ -18,61 +19,79 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import MailModel from '../Models/MailModel';
+import { selectMail,updateCurrentMail } from "../Redux/ReduxActions";
 
+const { ipcRenderer } = window.require('electron');
 const theme = createMuiTheme();
 const useStyles = {
     root: {
+        overflow: "auto"
       //width: '100%',
       //maxWidth: 360,
     },
     nested: {
-      paddingLeft: theme.spacing(5),
+      paddingLeft: theme.spacing(3),
     },
 };
+const Arduino = require("../Arduino");
 
 export class MailList extends Component {
+
+    handleOpenMail=(e,p)=>{
+        e.preventDefault();
+
+        let TempSetting ={...this.props.Settings};
+        let MailInfo = {...TempSetting.Maillist.MailList.find(Item=>Item.Id === p)};
+        TempSetting.CurrentMail = MailInfo;
+        this.props.updateCurrentMail(TempSetting);
+        //Arduino.SendMessageReceive();
+    }
+
     render() {
         const {classes} = this.props;
         
         return (
-            <div>
-                <List>
-                    {[0, 1, 2, 3,4,5,6].map((value) => {
-                        const labelId = `checkbox-list-label-${value}`;
-                
-                        return (
-                            <Accordion>
-                                <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
-                                aria-label="Expand"
-                                aria-controls="additional-actions1-content"
-                                id="additional-actions1-header"
-                                >
-                                    <Typography>{labelId}</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                <Typography color="textSecondary">
-                                    The click event of the nested action will propagate up and expand the accordion unless
-                                    you explicitly stop it.
-                                </Typography>
-                                </AccordionDetails>
-                            </Accordion>
-                        );
-                    })}                
+            <div>         
+                <Paper style={{maxHeight: "55vh", overflow: 'auto'}}>
 
-                </List>
+                    <List className={classes.root} >
+                        {
+                            this.props.Settings.Maillist.MailList === undefined ? <div></div> : 
+                            this.props.Settings.Maillist.MailList.map((value) => {
+                                const labelId = `checkbox-list-label-${value}`;
+                        
+                                return (
+                                    <ListItem className={classes.nested} key={value.Id} role={undefined} dense button onClick={(e)=>this.handleOpenMail(e,value.Id)}>
+                                        <ListItemAvatar>
+                                            <Avatar>
+                                                {value.FromName.substring(0, 1).toUpperCase()}
+                                            </Avatar>
+                                        </ListItemAvatar>
+                                        <ListItemText id={labelId} primary={value.Subject} secondary={value.Date} />                           
+                                    </ListItem>  
+                                );
+                            })                        
+                        }
+                    </List> 
+                </Paper>
+
             </div>
         )
     }
 }
 
-const mapStateToProps = (state) => ({
-    
-})
-
-const mapDispatchToProps = {
-    
+function mapStateToProps(state) {
+    return { Settings: state.Settings };
 }
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        selectMail: Setting => dispatch(selectMail(Setting))  ,
+        updateCurrentMail: keyButton => dispatch(updateCurrentMail(keyButton))      
+    }
+}
+
 
 const MailListComponent = withStyles(useStyles)(MailList);
 export default connect(mapStateToProps, mapDispatchToProps)(MailListComponent)

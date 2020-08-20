@@ -1,37 +1,28 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { ThemeProvider } from "@material-ui/styles";
-import {createMuiTheme} from "@material-ui/core";
-import CssBaseline from '@material-ui/core/CssBaseline';
-import * as colors from "@material-ui/core/colors";
-
 import Main from './Components/Main';
 import SettingsModel from './Models/SettingsModel';
-import { readSettings} from "./Redux/ReduxActions";
-import StartUp from './Startup';
+import { readSettings,updateCurrentMail } from "./Redux/ReduxActions";
+import MailModel from './Models/MailModel';
 
-const theme = createMuiTheme({
-  palette: {
-    type: "dark",
-  },
-  overrides: {
-    MuiDrawer: {
-      paper: {
-        backgroundColor: colors.grey[900],
-        color: colors.grey[100]
-      }
-    }
-  }
-});
-
+const { ipcRenderer } = window.require('electron');
+const notifier = window.require('mail-notifier');
 const path = require('path');
 const fs = window.require('fs');
 const isDev = window.require("electron-is-dev");
-const StartServices = new StartUp();
+
+const Arduino = require("./Arduino");
+ 
 
 export class App extends Component {
 
   componentDidMount(){
+    Arduino.ConnectArduino();
+    ipcRenderer.on('close-mail',(e,p)=>{
+      console.log("trigger-closemail");
+      Arduino.SendCloseMessage();
+    });
+
     let JsonPath = isDev
     ? "./Settings.json"
     : path.join(window.process.execPath, "../Settings.json");
@@ -45,13 +36,46 @@ export class App extends Component {
                   console.log(err);
               }
           }); 
-          this.props.readSettings(Settings);
+          this.props.readSettings();
       }
       else{
         const data = fs.readFileSync(JsonPath,{encoding:'utf8', flag:'r'});
         let Settings = Object.assign(new SettingsModel(), JSON.parse(data));
         this.props.readSettings(Settings);
-        StartServices.StartImapServices(Settings);
+
+        if (Settings.Imap.UserName !== "" 
+            || Settings.Imap.Password !== ""
+            || Settings.Imap.Host) 
+        {
+            notifier(
+                {
+                    user: Settings.Imap.UserName,
+                    password: Settings.Imap.Password,
+                    host: Settings.Imap.Host,
+                    port: 993, // imap port
+                    tls: true,// use secure connection
+                    connTimeout : 5000000,
+                    tlsOptions: { rejectUnauthorized: false }
+                }
+            )
+            .on('end', () => notifier.start()) 
+            .on('mail', mail => 
+               {
+                  console.log(mail);
+                  let Data = {...this.props.Settings};
+                  Data.CurrentMail = new MailModel();
+                  Data.CurrentMail.Subject = mail.subject;
+                  Data.CurrentMail.FromName = mail.from[0].name;
+                  Data.CurrentMail.FromAdress = mail.from[0].address;
+                  Data.CurrentMail.Date = new Date().toLocaleString();
+                  Data.CurrentMail.Html = mail.html;
+
+                  Data.Maillist.MailList.push(Data.CurrentMail);
+                  this.props.updateCurrentMail(Data);
+                  Arduino.SendMessageReceive("");
+               })
+            .start();         
+        }
       }
     } catch(err) {
       console.error(err)
@@ -60,21 +84,19 @@ export class App extends Component {
 
   render() {
     return (
-      <ThemeProvider theme={theme}>
-        <CssBaseline/>
-        <Main/> 
-      </ThemeProvider> 
+      <Main/> 
     )
   }
 }
 
-const mapStateToProps = (state) => ({
-  
-})
+const mapStateToProps = (state) => {
+  return { Settings: state.Settings };
+};
 
 const mapDispatchToProps = (dispatch)=> {
   return {
-    readSettings: keyButton => dispatch(readSettings(keyButton))
+    readSettings: keyButton => dispatch(readSettings(keyButton)),
+    updateCurrentMail: keyButton => dispatch(updateCurrentMail(keyButton))
   }
 }
 

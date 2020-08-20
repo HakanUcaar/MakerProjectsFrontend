@@ -7,11 +7,13 @@ import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import SettingsIcon from '@material-ui/icons/Settings';
-
+import Typography from '@material-ui/core/Typography';
 import Settings from './Settings';
 import PowerIcon from '@material-ui/icons/Power';
 import PowerOffIcon from '@material-ui/icons/PowerOff';
 
+const Arduino = require("../Arduino");
+const notifier = window.require('mail-notifier');
 const useStyles = {
     lvl1:{
         flexGrow: "0",
@@ -46,10 +48,16 @@ export class Header extends Component {
         }
     }
 
+    handleConnectClick=()=>{
+        Arduino.SendCloseMessage();
+        //notifier.start();
+    }
+
     handleSettingClose=()=>{
         this.setState({settingOpen:false});
     }
     handleSettingOpen=()=>{
+        //ipcRenderer.send('send-currentmail', 'ping');
         this.setState({settingOpen:true});
     }
 
@@ -68,12 +76,15 @@ export class Header extends Component {
                                 <SettingsIcon/>
                             </IconButton>
                             <IconButton >
-                                {this.props.IsConnected ? <PowerIcon/> : <PowerOffIcon/>}
+                                {this.props.IsConnected ? <PowerIcon onClick={this.handleConnectClick}/> : <PowerOffIcon onClick={this.handleConnectClick}/>}
                             </IconButton>                            
                         </Box>
                     </Box>
                 </Box>
                 <Settings open = {this.state.settingOpen} handleClose = {this.handleSettingClose}></Settings>
+                <Typography variant="h5" component="h2">
+                    <b>Gelen Mail Listesi</b>
+                </Typography>  
                 <Divider></Divider>                
             </div>
         )

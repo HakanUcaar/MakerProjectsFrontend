@@ -32,17 +32,17 @@ export class Settings extends Component {
 
     onHostChange=(e)=>{
         let TmpSetting = {...this.props.Settings}
-        TmpSetting.Host = e.target.value;  
+        TmpSetting.Imap.Host = e.target.value;  
         this.props.updateSettings(TmpSetting);  
     }
     onUserNameChange=(e)=>{
         let TmpSetting = {...this.props.Settings}
-        TmpSetting.UserName = e.target.value;  
+        TmpSetting.Imap.UserName = e.target.value;  
         this.props.updateSettings(TmpSetting); 
     }
     onPasswordChange=(e)=>{
         let TmpSetting = {...this.props.Settings}
-        TmpSetting.Password = e.target.value;  
+        TmpSetting.Imap.Password = e.target.value;  
         this.props.updateSettings(TmpSetting); 
     }
 
@@ -60,7 +60,7 @@ export class Settings extends Component {
                             type="text"
                             fullWidth
                             onChange={(e)=>this.onHostChange(e)}
-                            value = {this.props.Settings.Host}
+                            value = {this.props.Settings.Imap.Host}
                         />
                         <TextField
                             autoFocus
@@ -70,7 +70,7 @@ export class Settings extends Component {
                             type="text"
                             fullWidth
                             onChange={(e)=>this.onUserNameChange(e)}
-                            value = {this.props.Settings.UserName}
+                            value = {this.props.Settings.Imap.UserName}
                         />
                         <TextField
                             autoFocus
@@ -80,7 +80,7 @@ export class Settings extends Component {
                             type="text"
                             fullWidth
                             onChange={(e)=>this.onPasswordChange(e)}
-                            value = {this.props.Settings.Password}
+                            value = {this.props.Settings.Imap.Password}
                         />                                                
                     </DialogContent>
                     <DialogActions>
@@ -104,8 +104,7 @@ function mapStateToProps(state) {
 const mapDispatchToProps = (dispatch) => {
     return {
         updateSettings: Setting => dispatch(updateSettings(Setting)),
-        saveSettings: Setting => dispatch(saveSettings(Setting))
-        
+        saveSettings: Setting => dispatch(saveSettings(Setting))        
     }
 }
 
